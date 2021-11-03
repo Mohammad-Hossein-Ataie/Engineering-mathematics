@@ -1,0 +1,46 @@
+% In the name of God
+% Part 2
+clc; % clear command screen
+[Y1, FS1]=audioread('violin-C4.wav'); %y1 is sampled data, and a sample rate is FS1
+[Y2, FS2]=audioread('violin-G4.wav'); %y1 is sampled data, and a sample rate is FS1
+
+ figure(1);
+ plot(Y1);
+ xlabel('Time(sec)');
+ ylabel('Amplitude C4');
+ figure(4);
+ plot(Y2);
+ xlabel('Time(sec)');
+ ylabel('Amplitude G4');
+
+fs = 3000; %Sampling frequency
+xFft = linspace(1000, fs/2, numel(Y1)); 
+yFft = fft(Y1); 
+yFft = fftshift(yFft); 
+yFft = abs(yFft); 
+figure(2);
+plot(xFft, yFft);
+
+fs = 3000; %Sampling frequency
+xFft = linspace(1000, fs/2, numel(Y2)); 
+yFft = fft(Y2); 
+yFft = fftshift(yFft); 
+yFft = abs(yFft); 
+figure(3);
+plot(xFft, yFft);
+sound(Y1)
+pause(10)
+sound(Y2)
+pause;
+T = readtable('notes.csv');
+cc = table2cell(T);
+[mxyf,i]=max(yFft);
+nf = xFft(i); %Note Frequency
+numOfRow = size(T,1);
+for k=1:numOfRow
+    if nf < cell2mat(cc(k,2))
+        break;
+    end
+end
+cell2mat(cc(k-1,1))
+        
